@@ -6,60 +6,36 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Spinner,
   Stat,
   StatHelpText,
   StatLabel,
   Text,
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
-
-import fetchAllCurrencies from '@/api/fetchAllCurrencies'
-import fetchInstruments from '@/api/fetchInstruments'
-import { CurrencyResponseSchema } from '@/api/types/public.get_all_currencies'
-import { InstrumentPublicResponseSchema } from '@/api/types/public.get_instruments'
-
-const ETH_CURRENCY = 'ETH'
-const BTC_CURRENCY = 'BTC'
+import React from 'react'
 
 export default function Home() {
-  const [currencies, setCurrencies] = useState<CurrencyResponseSchema[]>([])
-  const ethCurrency = currencies.find(c => c.currency === ETH_CURRENCY)
-  const [instruments, setInstruments] = useState<InstrumentPublicResponseSchema[]>([])
-  useEffect(() => {
-    fetchAllCurrencies().then(c => setCurrencies(c.result))
-    // Fetch ETH instruments from Lyra API
-    fetchInstruments({ currency: ETH_CURRENCY, expired: false, instrument_type: 'option' }).then(r =>
-      setInstruments(r.result)
-    )
-  }, [])
-
+  const currency: string | null = null
   const strikePrice: number | null = null
   const expiryTimestamp: number | null = null
-  const spotPrice = ethCurrency ? +ethCurrency.spot_price : null
-
-  const isCall = strikePrice && spotPrice ? strikePrice > spotPrice : false
-
-  if (!ethCurrency || !spotPrice) {
-    return <Spinner size="xl" />
-  }
+  const spotPrice: number | null = null
+  const isCall = false
 
   return (
     <>
       <Text mb={2}>
         <Menu>
-          <MenuButton as={Button}>{ETH_CURRENCY}</MenuButton>
+          <MenuButton as={Button}>{currency ?? '?'}</MenuButton>
           <MenuList>
-            <MenuItem>{ETH_CURRENCY}</MenuItem>
-            <MenuItem>{BTC_CURRENCY}</MenuItem>
+            <MenuItem>A</MenuItem>
+            <MenuItem>B</MenuItem>
           </MenuList>
         </Menu>
         &nbsp;is currently worth&nbsp;
-        {formatUSD(spotPrice)}
+        {spotPrice ? formatUSD(spotPrice) : '?'}
       </Text>
       <Flex mb={4}>
         <Text>
-          I think {ETH_CURRENCY} is going {isCall ? `up` : `down`} to&nbsp;
+          I think {currency ?? '?'} is going {isCall ? `up` : `down`} to&nbsp;
           <Menu>
             <MenuButton as={Button}>{strikePrice ? formatUSD(strikePrice) : `?`}</MenuButton>
             <MenuList>
@@ -74,7 +50,7 @@ export default function Home() {
       <Divider mb={4} width={500} />
       <Stat sx={{ border: `1px solid lightgray`, borderRadius: `16px`, width: 250 }} p={4}>
         <StatLabel>
-          Buy {ETH_CURRENCY} {strikePrice ? formatUSD(strikePrice) : '?'}&nbsp;
+          Buy {currency ?? '?'} {strikePrice ? formatUSD(strikePrice) : '?'}&nbsp;
           {isCall ? `Call` : `Put`}
         </StatLabel>
         <StatHelpText>Expires {expiryTimestamp ? formatDate(expiryTimestamp) : '?'}</StatHelpText>
