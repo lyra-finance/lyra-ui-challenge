@@ -13,38 +13,35 @@ import {
   StatNumber,
   Text,
 } from '@chakra-ui/react'
-import { JsonRpcProvider } from '@ethersproject/providers'
-import Lyra, { Market } from '@lyrafinance/lyra-js'
 import { BigNumber, utils } from 'ethers'
 import React, { useEffect, useState } from 'react'
 
-const provider = new JsonRpcProvider(
-  `https://arbitrum-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`,
-  42161
-)
-const lyra = new Lyra({
-  provider,
-})
+import fetchAllCurrencies from '@/api/fetchAllCurrencies'
+import fetchInstruments from '@/api/fetchInstruments'
+import { CurrencyResponseSchema } from '@/api/types/public.get_all_currencies'
+import { InstrumentPublicResponseSchema } from '@/api/types/public.get_instruments'
 
-const MARKET_NAME = 'ETH'
+const CURRENCY = 'ETH'
 
 export default function Home() {
-  const [market, setMarket] = useState<Market | null>(null)
-
+  const [currencies, setCurrencies] = useState<CurrencyResponseSchema[]>([])
+  const ethCurrency = currencies.find(c => c.currency === CURRENCY)
+  const [instruments, setInstruments] = useState<InstrumentPublicResponseSchema[]>([])
   useEffect(() => {
-    // Fetch the Market entity from Lyra.js
-    lyra.market(MARKET_NAME).then(market => {
-      setMarket(market)
-    })
+    fetchAllCurrencies().then(c => setCurrencies(c.result))
+    // Fetch ETH instruments from Lyra API
+    fetchInstruments({ currency: CURRENCY, expired: false, instrument_type: 'option' }).then(r =>
+      setInstruments(r.result)
+    )
   }, [])
 
   const strikePrice: number | null = null
   const expiryTimestamp: number | null = null
-  const spotPrice = market ? fromBigNumber(market.spotPrice) : null
+  const spotPrice = ethCurrency ? +ethCurrency.spot_price : null
 
   const isCall = strikePrice && spotPrice ? strikePrice > spotPrice : false
 
-  if (!market || !spotPrice) {
+  if (!ethCurrency || !spotPrice) {
     return <Spinner size="xl" />
   }
 
@@ -53,12 +50,12 @@ export default function Home() {
   return (
     <>
       <Text mb={2}>
-        {MARKET_NAME} is currently worth&nbsp;
+        {CURRENCY} is currently worth&nbsp;
         {formatUSD(spotPrice)}
       </Text>
       <Flex mb={4}>
         <Text>
-          I think {MARKET_NAME} is going {isCall ? `up` : `down`} to&nbsp;
+          I think {CURRENCY} is going {isCall ? `up` : `down`} to&nbsp;
           <Menu>
             <MenuButton as={Button}>{strikePrice ? formatUSD(strikePrice) : `?`}</MenuButton>
             <MenuList>
@@ -73,7 +70,7 @@ export default function Home() {
       <Divider mb={4} width={500} />
       <Stat sx={{ border: `1px solid lightgray`, borderRadius: `16px`, width: 250 }} p={4}>
         <StatLabel>
-          Buy {MARKET_NAME} {strikePrice ? formatUSD(strikePrice) : '?'}&nbsp;
+          Buy {CURRENCY} {strikePrice ? formatUSD(strikePrice) : '?'}&nbsp;
           {isCall ? `Call` : `Put`}
         </StatLabel>
         <StatNumber>Premium: {premium ? formatUSD(premium) : '?'}</StatNumber>

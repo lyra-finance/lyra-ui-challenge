@@ -9,9 +9,8 @@ Ask us any questions about the expected final product, and how options or Lyra's
 ## Dependencies
 
 1. [React](https://reactjs.org/): A library for building user interfaces
-2. [Lyra.js](https://www.npmjs.com/package/@lyrafinance/lyra-js): An SDK to interact with Lyra's smart contracts on our test network
-3. [Chakra](https://chakra-ui.com/docs/components/overview): A simple component library
-4. [Next.js](https://nextjs.org/): A simple framework for spinning up apps
+2. [Chakra](https://chakra-ui.com/docs/components/overview): A simple component library
+3. [Next.js](https://nextjs.org/): A simple framework for spinning up apps
 
 ## Important Notes
 
@@ -41,42 +40,3 @@ yarn dev
 4. Complete the challenge. Edit `src/pages/index.ts` to complete the challenge, and watch `http://localhost:3000` for realtime updates.
 
 # Lyra.js Reference
-
-This line initializes our SDK with a connection to Kovan, Optimistic Ethereum's test network
-
-```
-const lyra = new Lyra(Deployment.Kovan)
-```
-
-To fetch a market, you can make an async request by market name (e.g. "ETH")
-
-```
-const market = lyra.market('ETH')
-const spotPrice = market.spotPrice // Current value of ETH
-```
-
-To get expiries (boards) for a market, use the boards edge from market
-
-```
-const boards = market.boards()
-const firstBoard = boards[0] // Earliest board
-const expiryTimestamp = firstBoard.expiryTimestamp // Expiry as unix timestamp
-```
-
-To get strikes for a board, use the strikes edge from board
-
-```
-const strikes = board.strikes()
-const firstStrike = strikes[0] // Smallest strike
-const strikePrice = firstStrike.strikePrice // Strike price
-```
-
-To quote an option premium, use the quote edge from strike
-
-```
-const isCall = true
-const isBuy = true // Always true for this exercise
-const size = toBigNumber(1.0)
-const quote = strike.quote(isCall, isBuy, size)
-const premium = quote.premium // Option price
-```
