@@ -13,7 +13,6 @@ import {
   StatNumber,
   Text,
 } from '@chakra-ui/react'
-import { BigNumber, utils } from 'ethers'
 import React, { useEffect, useState } from 'react'
 
 import fetchAllCurrencies from '@/api/fetchAllCurrencies'
@@ -21,16 +20,16 @@ import fetchInstruments from '@/api/fetchInstruments'
 import { CurrencyResponseSchema } from '@/api/types/public.get_all_currencies'
 import { InstrumentPublicResponseSchema } from '@/api/types/public.get_instruments'
 
-const CURRENCY = 'ETH'
+const ETH_CURRENCY = 'ETH'
 
 export default function Home() {
   const [currencies, setCurrencies] = useState<CurrencyResponseSchema[]>([])
-  const ethCurrency = currencies.find(c => c.currency === CURRENCY)
+  const ethCurrency = currencies.find(c => c.currency === ETH_CURRENCY)
   const [instruments, setInstruments] = useState<InstrumentPublicResponseSchema[]>([])
   useEffect(() => {
     fetchAllCurrencies().then(c => setCurrencies(c.result))
     // Fetch ETH instruments from Lyra API
-    fetchInstruments({ currency: CURRENCY, expired: false, instrument_type: 'option' }).then(r =>
+    fetchInstruments({ currency: ETH_CURRENCY, expired: false, instrument_type: 'option' }).then(r =>
       setInstruments(r.result)
     )
   }, [])
@@ -50,12 +49,12 @@ export default function Home() {
   return (
     <>
       <Text mb={2}>
-        {CURRENCY} is currently worth&nbsp;
+        {ETH_CURRENCY} is currently worth&nbsp;
         {formatUSD(spotPrice)}
       </Text>
       <Flex mb={4}>
         <Text>
-          I think {CURRENCY} is going {isCall ? `up` : `down`} to&nbsp;
+          I think {ETH_CURRENCY} is going {isCall ? `up` : `down`} to&nbsp;
           <Menu>
             <MenuButton as={Button}>{strikePrice ? formatUSD(strikePrice) : `?`}</MenuButton>
             <MenuList>
@@ -70,7 +69,7 @@ export default function Home() {
       <Divider mb={4} width={500} />
       <Stat sx={{ border: `1px solid lightgray`, borderRadius: `16px`, width: 250 }} p={4}>
         <StatLabel>
-          Buy {CURRENCY} {strikePrice ? formatUSD(strikePrice) : '?'}&nbsp;
+          Buy {ETH_CURRENCY} {strikePrice ? formatUSD(strikePrice) : '?'}&nbsp;
           {isCall ? `Call` : `Put`}
         </StatLabel>
         <StatNumber>Premium: {premium ? formatUSD(premium) : '?'}</StatNumber>
@@ -88,6 +87,3 @@ const formatDate = (ts: number): string => {
   const date = new Date(ts * 1000)
   return date.toLocaleString(`default`, { month: `long`, day: `2-digit` })
 }
-
-// Converts a BigNumber to number (for rendering)
-const fromBigNumber = (bn: BigNumber): number => parseFloat(utils.formatUnits(bn.toString(), 18))
