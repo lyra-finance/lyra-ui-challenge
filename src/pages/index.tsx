@@ -10,7 +10,6 @@ import {
   Stat,
   StatHelpText,
   StatLabel,
-  StatNumber,
   Text,
 } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
@@ -21,6 +20,7 @@ import { CurrencyResponseSchema } from '@/api/types/public.get_all_currencies'
 import { InstrumentPublicResponseSchema } from '@/api/types/public.get_instruments'
 
 const ETH_CURRENCY = 'ETH'
+const BTC_CURRENCY = 'BTC'
 
 export default function Home() {
   const [currencies, setCurrencies] = useState<CurrencyResponseSchema[]>([])
@@ -44,12 +44,17 @@ export default function Home() {
     return <Spinner size="xl" />
   }
 
-  const premium: number | null = null
-
   return (
     <>
       <Text mb={2}>
-        {ETH_CURRENCY} is currently worth&nbsp;
+        <Menu>
+          <MenuButton as={Button}>{ETH_CURRENCY}</MenuButton>
+          <MenuList>
+            <MenuItem>{ETH_CURRENCY}</MenuItem>
+            <MenuItem>{BTC_CURRENCY}</MenuItem>
+          </MenuList>
+        </Menu>
+        &nbsp;is currently worth&nbsp;
         {formatUSD(spotPrice)}
       </Text>
       <Flex mb={4}>
@@ -72,7 +77,6 @@ export default function Home() {
           Buy {ETH_CURRENCY} {strikePrice ? formatUSD(strikePrice) : '?'}&nbsp;
           {isCall ? `Call` : `Put`}
         </StatLabel>
-        <StatNumber>Premium: {premium ? formatUSD(premium) : '?'}</StatNumber>
         <StatHelpText>Expires {expiryTimestamp ? formatDate(expiryTimestamp) : '?'}</StatHelpText>
       </Stat>
     </>

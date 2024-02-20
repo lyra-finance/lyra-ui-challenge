@@ -14,11 +14,8 @@ Ask us any questions about the expected final product, and how options or Lyra's
 
 ## Important Notes
 
-1. You have to pay a dollar price for a call or put option, we call this the premium.
-2. If the strike price is greater than the spot price (current ETH value), we expect the price to go up and should buy a call. If the strike is lower than spot, we expect the price to go down and should buy a put.
-3. Markets have many boards (or expiries), boards have many strikes, and quotes are made on strikes.
-4. To quote the premium for a call or put in Lyra's SDK, you need to have a reference to the strike ID, not just strike price. The same strike price across different expiries does not have the same strike ID.
-5. Most dollar values in Lyra's SDK are BigNumbers. We provide helper functions to convert between BigNumber and number format.
+1. If the strike price is greater than the spot price (current ETH value), we expect the price to go up and should buy a call. If the strike is lower than spot, we expect the price to go down and should buy a put.
+2. Markets have many expiries, and expiries have many strikes.
 
 # Setup
 
