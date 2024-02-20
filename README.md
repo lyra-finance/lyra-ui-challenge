@@ -4,7 +4,7 @@ This task involves building a simple text UI to help people buy calls and puts o
 
 Ask us any questions about the expected final product, and how options or Lyra's API works. We prefer thoughtful questions, planning and correctness over completeness.
 
-<a href="https://imgur.com/HIiZFaS"><img src="https://i.imgur.com/HIiZFaS.gif" title="source: imgur.com" /></a>
+<a href="https://i.imgur.com/a89tbvU"><img src="https://i.imgur.com/a89tbvU.gif" title="source: imgur.com" /></a>
 
 ## Dependencies
 
