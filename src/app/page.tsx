@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Button,
   Divider,
@@ -11,14 +13,29 @@ import {
   StatLabel,
   Text,
 } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect } from 'react'
+
+import fetchAllCurrencies from '@/api/fetchAllCurrencies'
 
 export default function Home() {
+  // TODO: turn these variables into state
   const currency: string | null = null
   const strikePrice: number | null = null
   const expiryTimestamp: number | null = null
   const spotPrice: number | null = null
   const isCall = false
+
+  useEffect(() => {
+    const fetch = async () => {
+      const { result: currencies } = await fetchAllCurrencies()
+      console.log(currencies)
+
+      // TODO: use currencies to determine price of ETH, BTC, SOL
+      // filter out non ETH / BTC / SOL currencies
+    }
+
+    fetch()
+  }, [])
 
   return (
     <>
