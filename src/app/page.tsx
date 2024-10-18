@@ -30,8 +30,8 @@ export default function Home() {
       const { result: currencies } = await fetchAllCurrencies()
       console.log(currencies)
 
-      // TODO: use currencies to determine price of ETH, BTC, SOL
-      // filter out non ETH / BTC / SOL currencies
+      // TODO: use currencies to determine price of ETH & BTC
+      // filter out non ETH / BTC currencies
     }
 
     fetch()
